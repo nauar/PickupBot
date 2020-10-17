@@ -2,6 +2,7 @@ package info.nauar.irc.pickupBot;
 
 import info.nauar.irc.pickupBot.event.EventService;
 import info.nauar.irc.pickupBot.message.MessageService;
+import info.nauar.irc.pickupBot.message.command.CommandException;
 import info.nauar.irc.pickupBot.nick.NickService;
 import lombok.NoArgsConstructor;
 import org.jibble.pircbot.DccChat;
@@ -64,7 +65,12 @@ public class PickupBot extends PircBot {
 
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
-        messageService.processMessage(channel, sender, login, hostname, message);
+        super.onMessage(channel, sender, login, hostname, message);
+        try {
+            messageService.processMessage(channel, sender, login, hostname, message);
+        } catch (CommandException e) {
+            sendNotice(sender, e.getMessage());
+        }
     }
 
     @Override
@@ -84,16 +90,19 @@ public class PickupBot extends PircBot {
 
     @Override
     protected void onJoin(String channel, String sender, String login, String hostname) {
+        super.onJoin(channel, sender, login, hostname);
         eventService.processJoin(channel, sender, login, hostname);
     }
 
     @Override
     protected void onPart(String channel, String sender, String login, String hostname) {
+        super.onPart(channel, sender, login, hostname);
         eventService.processPart(channel, sender, login, hostname);
     }
 
     @Override
     protected void onNickChange(String oldNick, String login, String hostname, String newNick) {
+        super.onNickChange(oldNick, login, hostname, newNick);
         nickService.processNickChange(oldNick, newNick);
     }
 

@@ -11,13 +11,10 @@ import org.springframework.stereotype.Service;
 public class MessageServiceImpl implements MessageService {
 
     @Autowired
-    private PickupBot pickupBot;
-
-    @Autowired
     private UserService userService;
 
     @Override
-    public void processMessage(String channel, String sender, String login, String hostname, String message) {
+    public void processMessage(String channel, String sender, String login, String hostname, String message) throws CommandException {
 
         String nick = sender;
 
@@ -27,7 +24,7 @@ public class MessageServiceImpl implements MessageService {
         }
 
         if (message.startsWith("!"))
-            processCommand(nick, message);
+            processCommand(channel, sender, login, hostname, message);
 
     }
 
@@ -39,13 +36,8 @@ public class MessageServiceImpl implements MessageService {
         return message.substring(message.indexOf('<')+1,message.indexOf('>'));
     }
 
-    private void processCommand(String nick, String message) {
-        String[] command = message.substring(1).split(" ");
-        try {
-            CommandProcessorFactory.getProcessor(message).process(nick, message);
-        } catch (CommandException commandExcepton) {
-            pickupBot.sendNotice(nick, commandExcepton.getMessage());
-        }
+    private void processCommand(String channel, String sender, String login, String hostname, String message) throws CommandException {
+        CommandProcessorFactory.getProcessor(message).process(channel, sender, login, hostname, message);
     }
 
 }
