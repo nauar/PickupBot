@@ -12,10 +12,10 @@ public class HelpCommandProcessor implements CommandProcessor {
     private static final String COMMAND = "!help";
     private static final String GENERIC_MESSAGE = Colors.BOLD + "!help <command>" + Colors.NORMAL
             + ": Gives help on a particular command. " + Colors.BOLD + "Available commands are: " + Colors.NORMAL +
-            " abort*, add, checkin*, checkout*, commands, help, motd*, note, pickups, promote, pull*, remove, renew, start*, subscribe, top10, unsubscribe, who";
+            " abort*, add, checkin*, checkout*, commands, help, kill, lastgame, lastgames, motd*, note, pickups, promote, pull*, remove, renew, start*, subscribe, top10, unsubscribe, who";
 
     @Override
-    public void process(String channel, String sender, String login, String hostname, String message) {
+    public void process(String channel, String sender, String login, String hostname, String message, boolean isPrivate) {
 
         if (message.trim().equals(COMMAND)) {
             processGenericHelp(sender);
@@ -39,6 +39,9 @@ public class HelpCommandProcessor implements CommandProcessor {
                     break;
                 case "help":
                     pickupBot.sendNotice(sender, Colors.BOLD + "!help [command]" + Colors.NORMAL + ": If a command is given, shows a description of it. Lists all the possible commands otherwise.");
+                    break;
+                case "kill":
+                    pickupBot.sendNotice(sender, Colors.BOLD + "!kill <nick>" + Colors.NORMAL + Colors.LIGHT_GRAY + "(not from PM)" + Colors.NORMAL + ": Make the bot mention the user with nickname <nick>.");
                     break;
                 case "lastgame":
                     pickupBot.sendNotice(sender, Colors.BOLD + "!lastgame" + Colors.NORMAL + ": Shows when the last game started and which players were in it.");

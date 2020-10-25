@@ -17,6 +17,12 @@ public class Channel {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String name;
+    private String motd;
+    private static String gameStatus;
     @ManyToMany(mappedBy = "channels")
     private Set<User> users = new CopyOnWriteArraySet<>();
+
+    public String getFullMotd() {
+        return gameStatus + " || " + motd;
+    }
 }

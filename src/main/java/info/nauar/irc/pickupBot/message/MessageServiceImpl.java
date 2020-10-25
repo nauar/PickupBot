@@ -1,6 +1,5 @@
 package info.nauar.irc.pickupBot.message;
 
-import info.nauar.irc.pickupBot.PickupBot;
 import info.nauar.irc.pickupBot.message.command.CommandException;
 import info.nauar.irc.pickupBot.message.command.CommandProcessorFactory;
 import info.nauar.irc.pickupBot.user.UserService;
@@ -14,18 +13,17 @@ public class MessageServiceImpl implements MessageService {
     private UserService userService;
 
     @Override
-    public void processMessage(String channel, String sender, String login, String hostname, String message) throws CommandException {
+    public void processMessage(Message message) throws CommandException {
+        String nick = message.getSender();
+        String messageText = message.getMessage();
 
-        String nick = sender;
-
-        if (userService.isConnectivityBot(sender)) {
-            message = adaptConnectivityBotMessage(message);
-            nick = getConnectivityBotMessageSender(message) + '_' + sender;
+        if (userService.isConnectivityBot(nick)) {
+            messageText = adaptConnectivityBotMessage(message.getMessage());
+            nick = getConnectivityBotMessageSender(messageText) + '_' + nick;
         }
 
-        if (message.startsWith("!"))
-            processCommand(channel, sender, login, hostname, message);
-
+        if (messageText.startsWith("!"))
+            processCommand(message.getChannel(), message.getSender(), message.getLogin(), message.getMessage(), messageText, message.isPrivate());
     }
 
     private String adaptConnectivityBotMessage(String message) {
@@ -36,8 +34,8 @@ public class MessageServiceImpl implements MessageService {
         return message.substring(message.indexOf('<')+1,message.indexOf('>'));
     }
 
-    private void processCommand(String channel, String sender, String login, String hostname, String message) throws CommandException {
-        CommandProcessorFactory.getProcessor(message).process(channel, sender, login, hostname, message);
+    private void processCommand(String channel, String sender, String login, String hostname, String message, boolean priv) throws CommandException {
+        CommandProcessorFactory.getProcessor(message).process(channel, sender, login, hostname, message, priv);
     }
 
 }

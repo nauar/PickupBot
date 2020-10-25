@@ -1,6 +1,7 @@
 package info.nauar.irc.pickupBot;
 
 import info.nauar.irc.pickupBot.event.EventService;
+import info.nauar.irc.pickupBot.message.Message;
 import info.nauar.irc.pickupBot.message.MessageService;
 import info.nauar.irc.pickupBot.message.command.CommandException;
 import info.nauar.irc.pickupBot.nick.NickService;
@@ -67,7 +68,13 @@ public class PickupBot extends PircBot {
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
         super.onMessage(channel, sender, login, hostname, message);
         try {
-            messageService.processMessage(channel, sender, login, hostname, message);
+            Message message1 = new Message();
+            message1.setChannel(channel);
+            message1.setSender(sender);
+            message1.setLogin(login);
+            message1.setHostname(hostname);
+            message1.setMessage(message);
+            messageService.processMessage(message1);
         } catch (CommandException e) {
             sendNotice(sender, e.getMessage());
         }
@@ -76,6 +83,16 @@ public class PickupBot extends PircBot {
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
         super.onPrivateMessage(sender, login, hostname, message);
+        try {
+            Message message1 = new Message();
+            message1.setSender(sender);
+            message1.setLogin(login);
+            message1.setHostname(hostname);
+            message1.setMessage(message);
+            messageService.processMessage(message1);
+        } catch (CommandException e) {
+            sendNotice(sender, e.getMessage());
+        }
     }
 
     @Override
