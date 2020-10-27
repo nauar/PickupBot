@@ -14,8 +14,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class GameType {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
     private String name;
     private Integer totalPlayers;
     @ManyToMany(mappedBy = "signedUpGameTypes")

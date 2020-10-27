@@ -25,4 +25,8 @@ public class Channel {
     public String getFullMotd() {
         return gameStatus + " || " + motd;
     }
+
+    public static void setGameStatus(String aGameStatus) {
+        gameStatus = aGameStatus;
+    }
 }

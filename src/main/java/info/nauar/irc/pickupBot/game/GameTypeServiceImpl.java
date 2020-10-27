@@ -1,6 +1,9 @@
 package info.nauar.irc.pickupBot.game;
 
+import info.nauar.irc.pickupBot.PickupBot;
+import info.nauar.irc.pickupBot.channel.ChannelService;
 import info.nauar.irc.pickupBot.message.command.CommandException;
+import info.nauar.irc.pickupBot.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +13,21 @@ import java.util.Optional;
 @Service
 public class GameTypeServiceImpl implements GameTypeService {
 
+    private static final String GAME_ABORTED = "GAME ABORTED: ";
+
     @Autowired
     private GameTypeRepository gameTypeRepository;
+
+    @Autowired
+    private PickupBot pickupBot;
+
+    @Autowired
+    private ChannelService channelService;
 
     @Override
     public GameType createGameType(String name, Integer totalPlayers) throws CommandException {
         GameType toCreate;
-        Optional<GameType> exists = gameTypeRepository.findByName(name);
+        Optional<GameType> exists = gameTypeRepository.findById(name);
         if (exists.isEmpty()) {
             toCreate = new GameType();
             toCreate.setName(name);
@@ -29,18 +40,37 @@ public class GameTypeServiceImpl implements GameTypeService {
 
     @Override
     public void deleteGameType(String name) throws CommandException {
-        Optional<GameType> gameType = gameTypeRepository.findByName(name);
+        Optional<GameType> gameType = gameTypeRepository.findById(name);
         if (gameType.isPresent())
             gameTypeRepository.delete(gameType.get());
     }
 
     @Override
-    public void add(List<String> names) {
+    public void abort(List<String> names) {
+        gameTypeRepository.findAll().forEach(gameType -> {
+            if (names.isEmpty() || (names.contains(gameType.getName())) && !gameType.getSignedUsers().isEmpty()) {
+                gameType.getSignedUsers().clear();
+                gameTypeRepository.save(gameType);
+                gameType.getSubscriptors().forEach((user -> {
+                    pickupBot.sendNotice(user.getNick(), GAME_ABORTED + gameType.getName());
+                }));
+            }
+        });
+        updateGameStatus();
+    }
+
+    private void updateGameStatus() {
+        String gamesStatus = "";
         for (GameType gameType : gameTypeRepository.findAll()) {
-            if (names.isEmpty() || names.contains(gameType(gameType.getName())))
-                gameType.getSignedUsers().add()
+            if (gameType.getSignedUsers().size() > 0) {
+                gamesStatus += " " + gameType.getName() + "[" + gameType.getSignedUsers().size() + "/" + gameType.getTotalPlayers() + "]";
+            }
         }
+        channelService.setGameStatus(gamesStatus);
+    }
 
-
+    @Override
+    public GameType getGameType(String name) {
+        return gameTypeRepository.findById(name).orElseThrow();
     }
 }

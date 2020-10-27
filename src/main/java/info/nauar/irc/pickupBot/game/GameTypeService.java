@@ -8,5 +8,7 @@ public interface GameTypeService {
 
     GameType createGameType(String name, Integer totalPlayers) throws CommandException;
     void deleteGameType(String name) throws CommandException;
-    void add(List<String> names);
+    void abort(List<String> names);
+    GameType getGameType(String name);
+
 }

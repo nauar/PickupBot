@@ -4,4 +4,5 @@ public interface ChannelService {
 
     Channel createChannel(String name);
     boolean channelExists(String name);
+    void setGameStatus(String gameStatus);
 }
