@@ -12,7 +12,7 @@ public class HelpCommandProcessor implements CommandProcessor {
     private static final String COMMAND = "!help";
     private static final String GENERIC_MESSAGE = Colors.BOLD + "!help <command>" + Colors.NORMAL
             + ": Gives help on a particular command. " + Colors.BOLD + "Available commands are: " + Colors.NORMAL +
-            " abort*, add, checkin*, checkout*, commands, help, kill, lastgame, lastgames, motd*, note, pickups, promote, pull*, remove, renew, start*, subscribe, top10, unsubscribe, who";
+            " abort*, add, commands, help, kill, lastgame, lastgames, motd*, note, pickups, promote, pull*, remove, renew, start*, subscribe, top10, unsubscribe, who";
 
     @Override
     public void process(String channel, String sender, String login, String hostname, String message, boolean isPrivate) {
@@ -27,12 +27,6 @@ public class HelpCommandProcessor implements CommandProcessor {
                     break;
                 case "add":
                     pickupBot.sendNotice(sender, Colors.BOLD + "!add [game [game ...]]" + Colors.NORMAL + Colors.LIGHT_GRAY + "(not from PM)" + Colors.NORMAL + ": Signs you up for one or more games.");
-                    break;
-                case "checkin":
-                    pickupBot.sendNotice(sender, Colors.BOLD + "!checkin <nick1> [nick2 [...]]" + Colors.NORMAL + Colors.LIGHT_GRAY + "(admin command)" + Colors.NORMAL + ": Add players to matchmaking playerlist. This command will add a +v flag to the given users in IRC.");
-                    break;
-                case "checkout":
-                    pickupBot.sendNotice(sender, Colors.BOLD + "!checkout <nick1> [nick2 [...]]" + Colors.NORMAL + Colors.LIGHT_GRAY + "(admin command)" + Colors.NORMAL + ": Remove players to matchmaking playerlist. This command will remove a +v flag to the given users in IRC.");
                     break;
                 case "commands":
                     pickupBot.sendNotice(sender, Colors.BOLD + "!commands" + Colors.NORMAL + ": Lists all commands.");
