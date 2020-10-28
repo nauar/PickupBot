@@ -4,16 +4,17 @@ import info.nauar.irc.pickupBot.PickupBot;
 import info.nauar.irc.pickupBot.channel.ChannelService;
 import info.nauar.irc.pickupBot.message.command.CommandException;
 import info.nauar.irc.pickupBot.user.User;
+import info.nauar.irc.pickupBot.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GameTypeServiceImpl implements GameTypeService {
 
     private static final String GAME_ABORTED = "GAME ABORTED: ";
+    private static final String GAME_NOT_EXIST = "GAME DOES NOT EXIST: ";
 
     @Autowired
     private GameTypeRepository gameTypeRepository;
@@ -23,6 +24,9 @@ public class GameTypeServiceImpl implements GameTypeService {
 
     @Autowired
     private ChannelService channelService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public GameType createGameType(String name, Integer totalPlayers) throws CommandException {
@@ -59,6 +63,25 @@ public class GameTypeServiceImpl implements GameTypeService {
         updateGameStatus();
     }
 
+    @Override
+    public void add(String nick, List<String> names) {
+        Iterator<GameType> gameTypes = gameTypeRepository.findAll().iterator();
+        boolean gameReady = false;
+        while(gameTypes.hasNext() && !gameReady) {
+            GameType gameType = gameTypes.next();
+            if (names.isEmpty() || (names.contains(gameType.getName())) && !gameType.getSignedUsers().isEmpty()) {
+                gameType.getSignedUsers().add(userService.getUser(nick));
+                if (gameType.getSignedUsers().size() == gameType.getTotalPlayers()) {
+                    gameReady(gameType);
+                    gameReady=!gameReady;
+                }
+            }
+        }
+        updateGameStatus();
+    }
+
+
+
     private void updateGameStatus() {
         String gamesStatus = "";
         for (GameType gameType : gameTypeRepository.findAll()) {
@@ -67,6 +90,27 @@ public class GameTypeServiceImpl implements GameTypeService {
             }
         }
         channelService.setGameStatus(gamesStatus);
+    }
+
+    private void gameReady(GameType gameType) {
+        channelService.broadcast("Game ready! " + gameType.getName());
+        StringBuilder sb = new StringBuilder("Players required: ");
+        gameType.getSignedUsers().forEach(user -> {
+            sb.append(user.getNick());
+            sb.append(", ");
+        });
+        sb.deleteCharAt(sb.length()-1);
+        sb.deleteCharAt(sb.length()-1);
+        channelService.broadcast(sb.toString());
+        removePlayersFromAllGames(gameType.getSignedUsers());
+
+    }
+
+    private void removePlayersFromAllGames(Set<User> users) {
+        gameTypeRepository.findAll().forEach(gameType -> {
+            gameType.getSignedUsers().removeAll(users);
+            gameTypeRepository.save(gameType);
+        });
     }
 
     @Override

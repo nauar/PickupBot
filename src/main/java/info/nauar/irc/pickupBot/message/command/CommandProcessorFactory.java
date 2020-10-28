@@ -6,8 +6,11 @@ public class CommandProcessorFactory {
         String command = message.split(" ")[0];
         CommandProcessor commandProcessor = null;
         switch (command) {
+            case "!abort":
+                commandProcessor = new AbortCommandProcessor();
+                break;
             case "!add":
-                commandProcessor = new HelpCommandProcessor();
+                commandProcessor = new AddCommandProcessor();
                 break;
             case "!help":
                 commandProcessor = new HelpCommandProcessor();

@@ -26,7 +26,7 @@ public class ChannelServiceImpl implements ChannelService {
             channel.setName(name);
             channelRepository.save(channel);
         } else {
-            channel = channelRepository.findByName(name).orElseThrow();
+            channel = channelRepository.findById(name).orElseThrow();
         }
         return channel;
     }
@@ -35,7 +35,14 @@ public class ChannelServiceImpl implements ChannelService {
     public void setGameStatus(String gameStatus) {
         Channel.setGameStatus(gameStatus);
         Arrays.stream(pickupBot.getChannels()).parallel().forEach(channelName -> {
-            pickupBot.setTopic(channelName, channelRepository.findByName(channelName).orElseThrow().getFullMotd());
+            pickupBot.setTopic(channelName, channelRepository.findById(channelName).orElseThrow().getFullMotd());
+        });
+    }
+
+    @Override
+    public void broadcast(String message) {
+        channelRepository.findAll().forEach(channel -> {
+            pickupBot.sendMessage(channel.getName(), message);
         });
     }
 }

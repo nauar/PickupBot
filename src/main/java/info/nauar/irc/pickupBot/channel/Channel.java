@@ -14,8 +14,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class Channel {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
     private String name;
     private String motd;
     private static String gameStatus;

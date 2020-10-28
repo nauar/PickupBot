@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 public class AbortCommandProcessor implements CommandProcessor {
 
-    private static final String PRIVATE_RESPONSE = "Command abort cannot be used in private.";
-    private static final String NO_ADMIN_RESPONSE = "Command abort requires to be channel operator.";
+    private static final String PRIVATE_RESPONSE = "Abort command cannot be used in private.";
+    private static final String NO_ADMIN_RESPONSE = "Abort command requires you to be channel operator.";
     private static final String GAME_NOT_PRESENT = "There is not such game: ";
 
     @Autowired

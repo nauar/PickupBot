@@ -3,8 +3,6 @@ package info.nauar.irc.pickupBot.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -21,35 +19,42 @@ public class UserServiceImpl implements UserService {
             user.setHostname(hostname);
             userRepository.save(user);
         } else {
-            user = userRepository.findByNick(nick).orElseThrow();
+            user = userRepository.findById(nick).orElseThrow();
         }
         return user;
     }
 
     @Override
+    public User getUser(String nick) {
+        return userRepository.findById(nick).orElseThrow();
+    }
+
+    @Override
     public void setNewNick(String oldNick, String newNick) {
-        User user = userRepository.findByNick(oldNick).orElseThrow();
+        User user = userRepository.findById(oldNick).orElseThrow();
         user.setNick(newNick);
         userRepository.save(user);
     }
 
     @Override
     public boolean nickExists(String nick) {
-        return userRepository.findByNick(nick).isPresent();
+        return userRepository.findById(nick).isPresent();
     }
 
     @Override
     public void deleteUser(String nick) {
-        userRepository.delete(userRepository.findByNick(nick).orElse(new User()));
+        userRepository.delete(userRepository.findById(nick).orElseThrow());
     }
 
     @Override
     public boolean isConnectivityBot(String nick) {
-        return userRepository.findByNick(nick).get().isConnectivityBot();
+        return userRepository.findById(nick).orElseThrow().isConnectivityBot();
     }
 
     @Override
     public boolean isOperator(String nick) {
-        return userRepository.findByNick(nick).get().isOperator();
+        return userRepository.findById(nick).orElseThrow().isOperator();
     }
+
+
 }
