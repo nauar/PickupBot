@@ -80,8 +80,6 @@ public class GameTypeServiceImpl implements GameTypeService {
         updateGameStatus();
     }
 
-
-
     private void updateGameStatus() {
         String gamesStatus = "";
         for (GameType gameType : gameTypeRepository.findAll()) {
