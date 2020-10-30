@@ -7,6 +7,8 @@ import java.util.Arrays;
 
 public class ChannelServiceImpl implements ChannelService {
 
+    private static final String CHANNEL_ALREADY_EXISTS = "Channel already exists.";
+
     @Autowired
     private ChannelRepository channelRepository;
 
@@ -15,18 +17,19 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public boolean channelExists(String name) {
-        return false;
+        return channelRepository.existsById(name);
     }
 
     @Override
-    public Channel createChannel(String name) {
+    public Channel createChannel(String name, String motd) {
         Channel channel;
         if (!channelExists(name)) {
             channel = new Channel();
             channel.setName(name);
+            channel.setMotd(motd);
             channelRepository.save(channel);
         } else {
-            channel = channelRepository.findById(name).orElseThrow();
+            throw new RuntimeException(CHANNEL_ALREADY_EXISTS);
         }
         return channel;
     }

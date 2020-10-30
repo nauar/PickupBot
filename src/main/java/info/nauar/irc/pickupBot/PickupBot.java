@@ -1,5 +1,6 @@
 package info.nauar.irc.pickupBot;
 
+import info.nauar.irc.pickupBot.channel.ChannelService;
 import info.nauar.irc.pickupBot.event.EventService;
 import info.nauar.irc.pickupBot.message.Message;
 import info.nauar.irc.pickupBot.message.MessageService;
@@ -20,6 +21,20 @@ import java.net.InetAddress;
 @NoArgsConstructor
 public class PickupBot extends PircBot {
 
+    private String bridgeBotName;
+
+    public PickupBot(String name) {
+        setName(name);
+    }
+
+    public String getBridgeBotName() {
+        return bridgeBotName;
+    }
+
+    public void setBridgeBotName(String bridgeBotName) {
+        this.bridgeBotName = bridgeBotName;
+    }
+
     @Autowired
     private NickService nickService;
 
@@ -28,6 +43,9 @@ public class PickupBot extends PircBot {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private ChannelService channelService;
 
     @Override
     public void setAutoNickChange(boolean autoNickChange) {
@@ -136,6 +154,7 @@ public class PickupBot extends PircBot {
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
         super.onTopic(channel, topic, setBy, date, changed);
+        channelService.createChannel(channel, topic);
     }
 
     @Override
@@ -382,4 +401,6 @@ public class PickupBot extends PircBot {
     public synchronized void dispose() {
         super.dispose();
     }
+
+
 }
