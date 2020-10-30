@@ -17,7 +17,7 @@ public class AppConfig {
     private static final String ARG_BOTNAME = "bot-name";
     private static final String ARG_CHANNEL = "channel";
     private static final String ARG_SERVER = "server";
-    
+
     @Autowired
     private ApplicationArguments args;
 

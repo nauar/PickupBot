@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CommandsCommandProcessor implements CommandProcessor {
 
     private static final String COMMANDS = Colors.BOLD + "Available commands are: " + Colors.NORMAL +
-            " abort*, add, commands, help, kill, lastgame, lastgames, motd*, note, pickups, promote, pull*, remove, renew, start*, subscribe, top10, unsubscribe, who";
+            " abort*, add, commands, help, kill, motd*, note, pickups, promote, pull*, remove, start*, subscribe, unsubscribe, who";
 
 
     @Autowired
