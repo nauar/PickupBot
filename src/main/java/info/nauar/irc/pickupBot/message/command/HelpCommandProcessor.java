@@ -12,7 +12,7 @@ public class HelpCommandProcessor implements CommandProcessor {
     private static final String COMMAND = "!help";
     private static final String GENERIC_MESSAGE = Colors.BOLD + "!help <command>" + Colors.NORMAL
             + ": Gives help on a particular command. " + Colors.BOLD + "Available commands are: " + Colors.NORMAL +
-            " abort*, add, commands, help, kill, motd*, note, pickups, promote, pull*, remove, start*, subscribe, unsubscribe, who";
+            " abort*, add, commands, help, kill, motd*, pickups, promote, pull*, remove, start*, subscribe, unsubscribe, who";
 
     @Override
     public void process(String channel, String sender, String login, String hostname, String message, boolean isPrivate) {
