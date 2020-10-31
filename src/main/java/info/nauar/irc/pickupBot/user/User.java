@@ -15,8 +15,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
-	private Long id;
 	private String nick;
 	private String login;
 	private String hostname;

@@ -12,12 +12,10 @@ import org.jibble.pircbot.DccFileTransfer;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 
-@Component
 @NoArgsConstructor
 public class PickupBot extends PircBot {
 

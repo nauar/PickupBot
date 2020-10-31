@@ -2,9 +2,11 @@ package info.nauar.irc.pickupBot.channel;
 
 import info.nauar.irc.pickupBot.PickupBot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
+@Service
 public class ChannelServiceImpl implements ChannelService {
 
     private static final String CHANNEL_ALREADY_EXISTS = "Channel already exists.";
