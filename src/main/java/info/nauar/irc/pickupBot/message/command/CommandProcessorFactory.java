@@ -12,8 +12,17 @@ public class CommandProcessorFactory {
             case "!add":
                 commandProcessor = new AddCommandProcessor();
                 break;
+            case "!commands":
+                commandProcessor = new CommandsCommandProcessor();
+                break;
             case "!help":
                 commandProcessor = new HelpCommandProcessor();
+                break;
+            case "!kill":
+                commandProcessor = new KillCommandProcessor();
+                break;
+            case "!motd":
+                commandProcessor = new MotdCommandProcessor();
                 break;
             default:
                 throw new CommandException("The command '" + command + "' is not available.");

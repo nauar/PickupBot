@@ -48,4 +48,12 @@ public class ChannelServiceImpl implements ChannelService {
             pickupBot.sendMessage(channel.getName(), message);
         });
     }
+
+    @Override
+    public void setMotd(String channelName, String motd) {
+        Channel channel = channelRepository.findById(channelName).orElseThrow();
+        channel.setMotd(motd);
+        channelRepository.save(channel);
+        pickupBot.setTopic(channelName, channel.getFullMotd());
+    }
 }

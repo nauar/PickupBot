@@ -6,4 +6,5 @@ public interface ChannelService {
     boolean channelExists(String name);
     void setGameStatus(String gameStatus);
     void broadcast(String message);
+    void setMotd(String channelName, String motd);
 }
